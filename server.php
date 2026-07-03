@@ -2,12 +2,24 @@
 declare(strict_types=1);
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+$file = __DIR__ . '/public' . $uri;
 
-// If the request maps to a real file inside public/ (css, js, images...),
-// let PHP's built-in server serve it directly.
-if ($uri !== '/' && file_exists(__DIR__ . '/public' . $uri)) {
-    return false;
+// Serve real static files ourselves (avoids the built-in server's
+// mmap-based handler, which throws "Bad file descriptor" on some filesystems)
+if ($uri !== '/' && is_file($file)) {
+    $mimeTypes = [
+        'css'  => 'text/css',
+        'js'   => 'application/javascript',
+        'png'  => 'image/png',
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'svg'  => 'image/svg+xml',
+        'ico'  => 'image/x-icon',
+    ];
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
+    readfile($file);
+    return true;
 }
 
-// Otherwise, hand off to the front controller.
 require __DIR__ . '/public/index.php';
