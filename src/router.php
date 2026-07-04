@@ -40,10 +40,9 @@ class Router {
 
             $controllerInstance = new $class;
             $controllerInstance->{$function}();
-            return; // stop after first match
+            return;
         }
 
-        // No route matched
         http_response_code(404);
         echo '404 Not Found';
     }

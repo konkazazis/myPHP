@@ -4,8 +4,6 @@ declare(strict_types=1);
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 $file = __DIR__ . '/public' . $uri;
 
-// Serve real static files ourselves (avoids the built-in server's
-// mmap-based handler, which throws "Bad file descriptor" on some filesystems)
 if ($uri !== '/' && is_file($file)) {
     $mimeTypes = [
         'css'  => 'text/css',
