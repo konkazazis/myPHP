@@ -29,24 +29,27 @@
 
   <div class="main-col">
 
-    <article class="featured">
-      <p class="eyebrow">Latest entry</p>
-      <h2><a href="#">The Slow Work of Paying Attention</a></h2>
-      <p class="excerpt">
-        On the difference between reading a page and reading it closely — and why the best ideas
-        tend to arrive in the margins, not the main text.
-      </p>
-      <div class="post-meta">
-        <span class="date">June 28, 2026</span>
-        <span class="sep">·</span>
-        <span>6 min read</span>
-        <span class="sep">·</span>
-        <span>Writing</span>
-        <span class="sep">·</span>
-        <a href="#" class="read-link">Read entry →</a>
-      </div>
-    </article>
-
+    <?php if (!empty($posts)): ?>   
+            <article class="featured">
+              <p class="eyebrow">Latest entry</p>
+              <?php foreach ( $posts as $post ) : ?>
+                <h2><a href="#"><?php echo $post['title'] ?></a></h2>
+                <p class="excerpt">
+                  <?php echo $post['content'] ?>
+                </p>
+                <div class="post-meta">
+                  <span class="date">June 28, 2026</span>
+                  <span class="sep">·</span>
+                  <span>6 min read</span>
+                  <span class="sep">·</span>
+                  <span>Writing</span>
+                  <span class="sep">·</span>
+                  <a href="#" class="read-link">Read entry →</a>
+              </div>
+              <?php endforeach; ?>
+            </article>
+     
+    <?php endif; ?>
 
     <p class="index-heading">Recent entries</p>
     <ul class="post-list">

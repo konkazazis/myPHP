@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 class Router {
     private array $routes = [];
 
-    public function add(string $method, string $path, array $controller): void
+    // Add optional $params argument (default to empty array)
+    public function add(string $method, string $path, array $controller, array $params = []): void
     {
         $path = $this->normalizePath($path);
 
@@ -13,7 +13,7 @@ class Router {
             'path' => $path,
             'method' => strtoupper($method),
             'controller' => $controller,
-            'middlewares' => []
+            'params' => $params, // Store the parameters
         ];
     }
 
@@ -22,7 +22,6 @@ class Router {
         $path = trim($path, '/');
         $path = "/{$path}/";
         $path = preg_replace('#[/]{2,}#', '/', $path);
-
         return $path;
     }
 
@@ -37,13 +36,14 @@ class Router {
             }
 
             [$class, $function] = $route['controller'];
-
             $controllerInstance = new $class;
-            $controllerInstance->{$function}();
+            
+            $controllerInstance->{$function}(...$route['params']);
+            
             return;
         }
 
         http_response_code(404);
         echo '404 Not Found';
     }
-}
+}   
